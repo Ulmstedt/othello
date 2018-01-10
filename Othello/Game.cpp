@@ -28,9 +28,11 @@ void Game::next_player()
 	}
 }
 
-Game::Game()
+Game::Game(IPlayer *p1, IPlayer *p2)
 {
 	board = new Board();
+	player1 = p1;
+	player2 = p2;
 	game_finished = false;
 	current_player = 1;
 	score.player1 = 0;
@@ -41,6 +43,8 @@ Game::Game()
 Game::~Game()
 {
 	delete board;
+	delete player1;
+	delete player2;
 }
 
 void Game::start_game()
@@ -50,29 +54,34 @@ void Game::start_game()
 	{
 		cout << "Player " << (current_player == 1 ? "X" : "O") << ": ";
 
+		Board_state state = board->get_board_state();
+
 		Position move;
-		cin >> move.x;
-		cin >> move.y;
+		if (current_player == 1)
+		{
+			move = player1->play(state);
+		}
+		else
+		{
+			move = player2->play(state);
+		}
 
 		bool success = play(move);
 		print_board();
-		if (!success) cout << "Illegal move! Try again." << endl;
+		if (success)
+		{
+			next_player();
+		}
+		else
+		{
+			cout << "Illegal move! Try again." << endl;
+		}
 	}
 }
 
 bool Game::play(Position pos)
 {
-	bool success = board->play(pos, current_player);
-
-	if (success)
-	{
-		next_player();
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return board->play(pos, current_player);
 }
 
 void Game::reset_game()

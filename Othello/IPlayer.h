@@ -3,6 +3,6 @@
 class IPlayer
 {
 public:
-	virtual Position play(Board_state board) = 0;
+	virtual Position play(Board_state) = 0;
 };
 

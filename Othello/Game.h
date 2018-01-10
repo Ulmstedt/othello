@@ -2,6 +2,7 @@
 #include <vector>
 #include "Definitions.h"
 #include "Board.h"
+#include "IPlayer.h"
 
 using namespace std;
 
@@ -11,13 +12,15 @@ class Game
 	int current_player;
 	Score score;
 	bool game_finished;
+	IPlayer *player1;
+	IPlayer *player2;
 
 
 	vector<Position> move_history;
 	void next_player();
 
 public:
-	Game();
+	Game(IPlayer *player1, IPlayer *player2);
 	~Game();
 
 	void start_game();
