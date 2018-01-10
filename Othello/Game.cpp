@@ -67,10 +67,10 @@ void Game::start_game()
 		}
 
 		bool success = play(move);
-		print_board();
 		if (success)
 		{
 			next_player();
+			print_board();
 		}
 		else
 		{
