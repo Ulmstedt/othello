@@ -1,6 +1,7 @@
 *.sln
-*.vcxproj
+*.vcxproj*
 stdafx.h
+stdafx.cpp
 targetver.h
 Debug/
 .vs/
