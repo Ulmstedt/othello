@@ -37,7 +37,7 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	current_player = 1;
 	score.player1 = 0;
 	score.player2 = 0;
-	gameGUI = new GUI(&quit);
+	gameGUI = new GUI();
 }
 
 
@@ -49,11 +49,17 @@ Game::~Game()
 	delete gameGUI;
 }
 
+void Game::quit_game()
+{
+	exit(EXIT_SUCCESS);
+}
+
 void Game::run_game()
 {
 	print_board();
-	while (!game_finished && !quit)
+	while (!game_finished)
 	{
+		gameGUI->handle_events();
 		cout << "Player " << (current_player == 1 ? "X" : "O") << ": ";
 
 		Board_state state = board->get_board_state();

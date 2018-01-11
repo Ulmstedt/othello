@@ -13,7 +13,6 @@ class Game
 	int current_player;
 	Score score;
 	bool game_finished = false;
-	bool quit = false;
 
 	IPlayer *player1 = NULL;
 	IPlayer *player2 = NULL;
@@ -22,13 +21,15 @@ class Game
 
 	vector<Position> move_history;
 	void next_player();
+	bool play(Position);
 
 public:
 	Game(IPlayer *player1, IPlayer *player2);
 	~Game();
 
+	static void quit_game();
+
 	void run_game();
-	bool play(Position);
 	void reset_game();
 	Board_state get_board_state() const;
 	int get_current_player() const;

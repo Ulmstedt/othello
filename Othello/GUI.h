@@ -15,15 +15,12 @@ class GUI
 	// Event handler
 	SDL_Event e;
 
-	// Pointer to the quit flag in the game (to be able to quit through the GUI)
-	bool *quit = NULL;
-
 	bool init();
 	bool loadMedia();
 	void close();
 
 public:
-	GUI(bool *quitflag);
+	GUI();
 	~GUI();
 	void draw_board();
 	void handle_events();

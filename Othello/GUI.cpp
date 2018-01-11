@@ -2,8 +2,9 @@
 #include "GUI.h"
 #include <SDL.h>
 #include <iostream>
+#include "Game.h"
 
-#define SCREEN_WIDTH 536
+#define SCREEN_WIDTH 528
 #define SCREEN_HEIGHT 528
 
 using namespace std;
@@ -67,11 +68,10 @@ void GUI::close()
 	SDL_Quit();
 }
 
-GUI::GUI(bool *quitflag)
+GUI::GUI()
 {
 	init();
 	loadMedia();
-	quit = quitflag;
 }
 
 
@@ -95,7 +95,7 @@ void GUI::handle_events()
 		// Quit event
 		if (e.type == SDL_QUIT)
 		{
-			*quit = true;
+			Game::quit_game();
 		}
 	}
 }
