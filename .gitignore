@@ -5,3 +5,4 @@ stdafx.cpp
 targetver.h
 Debug/
 .vs/
+*.dll
