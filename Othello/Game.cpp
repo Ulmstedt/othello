@@ -37,7 +37,7 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	current_player = 1;
 	score.player1 = 0;
 	score.player2 = 0;
-	gameGUI = new GUI();
+	gameGUI = new GUI(this);
 }
 
 
@@ -56,13 +56,12 @@ void Game::quit_game()
 
 void Game::run_game()
 {
-	print_board();
 	while (!game_finished)
 	{
 		gameGUI->handle_events();
-		cout << "Player " << (current_player == 1 ? "X" : "O") << ": ";
-
+		
 		Board_state state = board->get_board_state();
+		gameGUI->draw_board(state);
 
 		Position move;
 		if (current_player == 1)
@@ -78,11 +77,6 @@ void Game::run_game()
 		if (success)
 		{
 			next_player();
-			print_board();
-		}
-		else
-		{
-			cout << "Illegal move! Try again." << endl;
 		}
 	}
 }

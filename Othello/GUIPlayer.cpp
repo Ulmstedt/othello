@@ -1,11 +1,8 @@
 #include "stdafx.h"
 #include "GUIPlayer.h"
 #include "Game.h"
+#include "Definitions.h"
 
-#define XCLICK_MARGIN 4
-#define YCLICK_MARGIN 4
-#define XCLICK_DIV 65 // 520/8
-#define YCLICK_DIV XCLICK_DIV
 
 GUIPlayer::GUIPlayer(int id)
 {
@@ -28,8 +25,8 @@ Position GUIPlayer::play(Board_state board)
 			else if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
 				//cout << "Pressed (" << e.button.x << ", " << e.button.y << ")\n";
-				move.x = (e.button.x - XCLICK_MARGIN) / XCLICK_DIV;
-				move.y = (e.button.y - YCLICK_MARGIN) / YCLICK_DIV;
+				move.x = (e.button.x - GUI_XMARGIN) / GUI_SQWIDTH;
+				move.y = (e.button.y - GUI_YMARGIN) / GUI_SQHEIGHT;
 				return move;
 			}
 		}

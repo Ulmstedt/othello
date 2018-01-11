@@ -3,7 +3,7 @@
 #define WIDTH 8
 #define HEIGHT 8
 
-// Colors
+// Console colors
 #define C_WHITE 7
 #define C_RED 4
 #define C_YELLOW 6
@@ -28,3 +28,11 @@ typedef struct
 	int player1;
 	int player2;
 } Score;
+
+
+// GUI
+#define GUI_XMARGIN 4 // Margin from left side of window
+#define GUI_YMARGIN 4 // Margin from top of window
+#define GUI_SQWIDTH 65 // 520/8
+#define GUI_SQHEIGHT GUI_SQWIDTH
+#define GUI_PADDING 4 // Padding when drawing a piece in a square
