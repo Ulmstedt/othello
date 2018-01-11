@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Definitions.h"
 #include <windows.h>
+#include "BoardUtil.h"
 
 using namespace std;
 
@@ -11,12 +12,13 @@ void Game::next_player()
 	// Swap current player
 	current_player = (current_player == 1 ? 2 : 1);
 
+	Board_state state = board->get_board_state();
 	// If new current player has no legal moves, swap back
-	if (board->get_legal_moves(current_player).size() == 0)
+	if (BoardUtil::get_legal_moves(state, current_player).size() == 0)
 	{
 		current_player = (current_player == 1 ? 2 : 1);
 		// If the other player cant play either, game is finished
-		if (board->get_legal_moves(current_player).size() == 0)
+		if (BoardUtil::get_legal_moves(state, current_player).size() == 0)
 		{
 			game_finished = true;
 			print_board();
@@ -106,11 +108,6 @@ int Game::get_current_player() const
 	return current_player;
 }
 
-vector<Position> Game::get_legal_moves(int player) const
-{
-	return board->get_legal_moves(player);
-}
-
 Score Game::get_score() const
 {
 	return score;
@@ -121,7 +118,7 @@ void Game::print_board() const
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	Board_state board_state = board->get_board_state();
+	Board_state state = board->get_board_state();
 
 	system("CLS");
 
@@ -141,12 +138,12 @@ void Game::print_board() const
 		cout << y << " ";
 		for (int x = 0; x < WIDTH; ++x)
 		{
-			switch (board_state.board[x][y])
+			switch (state.board[x][y])
 			{
 			case 0:
 				if (SHOW_LEGAL_MOVES)
 				{
-					vector<Position> legal_moves = board->get_legal_moves(current_player);
+					vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
 					bool legal = false;
 					for (Position pos : legal_moves)
 					{

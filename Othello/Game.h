@@ -33,7 +33,6 @@ public:
 	void reset_game();
 	Board_state get_board_state() const;
 	int get_current_player() const;
-	vector<Position> get_legal_moves(int) const;
 	Score get_score() const;
 	void print_board() const;
 };
