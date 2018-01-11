@@ -28,6 +28,7 @@ class GUI
 	bool init();
 	bool loadMedia();
 	void close();
+	SDL_Rect get_rect(int x, int y) const;
 
 public:
 	GUI(Game*);

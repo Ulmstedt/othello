@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <iostream>
 #include "Game.h"
+#include "BoardUtil.h"
 
 #define SCREEN_WIDTH 528
 #define SCREEN_HEIGHT 528
@@ -93,6 +94,16 @@ void GUI::close()
 	SDL_Quit();
 }
 
+SDL_Rect GUI::get_rect(int x, int y) const
+{
+	SDL_Rect rect;
+	rect.x = GUI_XMARGIN + x*GUI_SQWIDTH + GUI_PADDING;
+	rect.y = GUI_YMARGIN + y*GUI_SQHEIGHT + GUI_PADDING;
+	rect.w = GUI_SQWIDTH - 2 * GUI_PADDING;
+	rect.h = GUI_SQHEIGHT - 2 * GUI_PADDING;
+	return rect;
+}
+
 GUI::GUI(Game *gamep)
 {
 	game = gamep;
@@ -108,8 +119,11 @@ GUI::~GUI()
 
 void GUI::draw_board(Board_state state)
 {
+	cout << "Drawing board" << endl;
 	// Draw background
 	SDL_RenderCopy(renderer, boardTexture, NULL, NULL);
+
+	int current_player = game->get_current_player();
 
 	for (int y = 0; y < HEIGHT; ++y)
 	{
@@ -117,11 +131,7 @@ void GUI::draw_board(Board_state state)
 		{
 			if (state.board[x][y] != 0)
 			{
-				SDL_Rect fillRect;
-				fillRect.x = GUI_XMARGIN + x*GUI_SQWIDTH + GUI_PADDING;
-				fillRect.y = GUI_YMARGIN + y*GUI_SQHEIGHT + GUI_PADDING;
-				fillRect.w = GUI_SQWIDTH - 2*GUI_PADDING;
-				fillRect.h = GUI_SQHEIGHT - 2*GUI_PADDING;
+				SDL_Rect fillRect = get_rect(x, y);
 				if (state.board[x][y] == 1)
 				{
 					SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
@@ -135,23 +145,17 @@ void GUI::draw_board(Board_state state)
 			}
 			else if (SHOW_LEGAL_MOVES)
 			{
-				/*vector<Position> legal_moves = board->get_legal_moves(current_player);
-				bool legal = false;
+				vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
 				for (Position pos : legal_moves)
 				{
 					if (pos.x == x && pos.y == y)
 					{
-						legal = true;
-						SetConsoleTextAttribute(hConsole, C_RED);
-						cout << " + ";
+						SDL_Rect fillRect = get_rect(x, y);
+						SDL_SetRenderDrawColor(renderer, 0xFF, 0xCC, 0x00, 0);
+						SDL_RenderFillRect(renderer, &fillRect);
 						break;
 					}
 				}
-				if (!legal)
-				{
-					SetConsoleTextAttribute(hConsole, C_WHITE);
-					cout << "   ";
-				}*/
 			}
 		}
 	}
