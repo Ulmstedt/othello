@@ -37,6 +37,7 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	current_player = 1;
 	score.player1 = 0;
 	score.player2 = 0;
+	gameGUI = new GUI(&quit);
 }
 
 
@@ -45,12 +46,13 @@ Game::~Game()
 	delete board;
 	delete player1;
 	delete player2;
+	delete gameGUI;
 }
 
-void Game::start_game()
+void Game::run_game()
 {
 	print_board();
-	while (!game_finished)
+	while (!game_finished && !quit)
 	{
 		cout << "Player " << (current_player == 1 ? "X" : "O") << ": ";
 
