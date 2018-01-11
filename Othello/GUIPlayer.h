@@ -8,7 +8,6 @@ class GUIPlayer : public IPlayer
 
 public:
 	GUIPlayer(int id);
-	~GUIPlayer();
 
 	Position play(Board_state board) override;
 };
