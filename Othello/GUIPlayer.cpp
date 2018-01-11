@@ -12,10 +12,6 @@ GUIPlayer::GUIPlayer(int id)
 	player_id = id;
 }
 
-GUIPlayer::~GUIPlayer()
-{
-}
-
 Position GUIPlayer::play(Board_state board)
 {
 	Position move;
