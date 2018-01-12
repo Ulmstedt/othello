@@ -9,7 +9,7 @@ using namespace std;
 
 Board::Board()
 {
-	init_board(1);
+	init_board(0);
 }
 
 

@@ -99,3 +99,17 @@ int BoardUtil::get_winner(Board_state state)
 		return DRAW;
 	}
 }
+
+int BoardUtil::empty_positions(Board_state state)
+{
+	int empty_positions = 0;
+	for (int x = 0; x < WIDTH; ++x)
+	{
+		for (int y = 0; y < HEIGHT; ++y)
+		{
+			if (state.board[x][y] == EMPTY) empty_positions++;
+		}
+	}
+
+	return empty_positions;
+}
