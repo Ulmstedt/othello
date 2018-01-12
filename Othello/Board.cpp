@@ -9,7 +9,7 @@ using namespace std;
 
 Board::Board()
 {
-	init_board(0);
+	init_board(1);
 }
 
 
@@ -78,7 +78,7 @@ void Board::init_board(int b)
 		{
 			for (int x = 0; x < WIDTH; ++x)
 			{
-				state.board[x][y] = (x + y) % 2 + 1;
+				state.board[x][y] = (x + y) % 2;
 				state.pieces[(x + y) % 2]++;
 			}
 		}

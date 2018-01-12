@@ -21,8 +21,8 @@ void Game::next_player()
 		// If the other player cant play either, game is finished
 		if (BoardUtil::get_legal_moves(state, current_player).size() == 0)
 		{
-			game_finished = true;
 			gameGUI->draw_board(state);
+			cout << "Black: " << state.pieces[0] << ", White: " << state.pieces[1] << endl;
 			int winner = BoardUtil::get_winner(state);
 			if (winner == PLAYER1)
 			{
@@ -42,10 +42,12 @@ void Game::next_player()
 
 			cout << " Click in the window for new game.";
 			SDL_Event e;
-			while (SDL_PollEvent(&e) != 0)
+			while (1)
 			{
+				SDL_PollEvent(&e);
 				if (e.type == SDL_MOUSEBUTTONDOWN)
 				{
+					cout << "Starting new game\n";
 					reset_game();
 					break;
 				}
@@ -59,7 +61,6 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	board = new Board();
 	player1 = p1;
 	player2 = p2;
-	game_finished = false;
 	current_player = PLAYER1;
 	score[PLAYER1] = score[PLAYER2] = 0;
 	gameGUI = new GUI(this);
@@ -81,7 +82,7 @@ void Game::quit_game()
 
 void Game::run_game()
 {
-	while (!game_finished)
+	while (1)
 	{
 		gameGUI->handle_events();
 		
@@ -118,7 +119,6 @@ void Game::reset_game()
 {
 	current_player = PLAYER1;
 	move_history.clear();
-	game_finished = false;
 	
 	delete board;
 	board = new Board();

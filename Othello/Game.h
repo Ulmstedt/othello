@@ -12,7 +12,6 @@ class Game
 	Board *board = NULL;
 	int current_player;
 	int score[3] = { 0, 0, 0}; // p1, p2, draws
-	bool game_finished = false;
 
 	IPlayer *player1 = NULL;
 	IPlayer *player2 = NULL;
