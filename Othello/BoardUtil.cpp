@@ -9,7 +9,7 @@ vector<Position> BoardUtil::get_legal_moves(Board_state state, int player)
 	{
 		for (int y = 0; y < HEIGHT; ++y)
 		{
-			if (state.board[x][y] == 0)
+			if (state.board[x][y] == EMPTY)
 			{
 				Position pos;
 				pos.x = x;
@@ -30,7 +30,7 @@ vector<Position> BoardUtil::get_legal_moves(Board_state state, int player)
 vector<Position> BoardUtil::get_flips(Board_state state, Position pos, int player)
 {
 	vector<Position> flips;
-	if (inside_board(pos) && state.board[pos.x][pos.y] == 0)
+	if (inside_board(pos) && state.board[pos.x][pos.y] == EMPTY)
 	{
 		for (int xdir = -1; xdir <= 1; ++xdir)
 		{
@@ -49,7 +49,7 @@ vector<Position> BoardUtil::get_flips(Board_state state, Position pos, int playe
 vector<Position> BoardUtil::check_dir(Board_state state, Position pos, int xdir, int ydir, int player)
 {
 	vector<Position> flips;
-	int opponent = (player == 1 ? 2 : 1);
+	int opponent = (player == PLAYER1 ? PLAYER2 : PLAYER1);
 
 	Position next_pos;
 	next_pos.x = pos.x;
@@ -59,7 +59,7 @@ vector<Position> BoardUtil::check_dir(Board_state state, Position pos, int xdir,
 	{
 		next_pos.x += xdir;
 		next_pos.y += ydir;
-		if (!inside_board(next_pos) || state.board[next_pos.x][next_pos.y] == 0)
+		if (!inside_board(next_pos) || state.board[next_pos.x][next_pos.y] == EMPTY)
 		{
 			flips.clear();
 			return flips;
@@ -82,4 +82,20 @@ bool BoardUtil::inside_board(Position position)
 		return false;
 	else
 		return true;
+}
+
+int BoardUtil::get_winner(Board_state state)
+{
+	if (state.pieces[0] > state.pieces[1])
+	{
+		return PLAYER1;
+	}
+	else if (state.pieces[1] > state.pieces[0])
+	{
+		return PLAYER2;
+	}
+	else
+	{
+		return DRAW;
+	}
 }

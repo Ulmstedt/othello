@@ -1,5 +1,10 @@
 #pragma once
 
+#define PLAYER1 0
+#define PLAYER2 1
+#define EMPTY -1
+#define DRAW -1
+
 #define WIDTH 8
 #define HEIGHT 8
 
@@ -11,7 +16,7 @@
 #define C_O 80
 #define C_NUMS 6
 
-#define SHOW_LEGAL_MOVES true
+#define SHOW_LEGAL_MOVES false
 
 typedef struct
 {
@@ -21,13 +26,8 @@ typedef struct
 typedef struct
 {
 	int board[WIDTH][HEIGHT];
+	int pieces[2] = { 0, 0 };
 } Board_state;
-
-typedef struct
-{
-	int player1;
-	int player2;
-} Score;
 
 
 // GUI

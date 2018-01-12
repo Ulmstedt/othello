@@ -11,7 +11,7 @@ class Game
 {
 	Board *board = NULL;
 	int current_player;
-	Score score;
+	int score[3] = { 0, 0, 0}; // p1, p2, draws
 	bool game_finished = false;
 
 	IPlayer *player1 = NULL;
@@ -33,7 +33,7 @@ public:
 	void reset_game();
 	Board_state get_board_state() const;
 	int get_current_player() const;
-	Score get_score() const;
 	void print_board() const;
+	vector<Position> get_move_history() const;
 };
 

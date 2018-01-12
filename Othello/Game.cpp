@@ -4,28 +4,52 @@
 #include "Definitions.h"
 #include <windows.h>
 #include "BoardUtil.h"
+#include <SDL.h>
 
 using namespace std;
 
 void Game::next_player()
 {
 	// Swap current player
-	current_player = (current_player == 1 ? 2 : 1);
+	current_player = (current_player == PLAYER1 ? PLAYER2 : PLAYER1);
 
 	Board_state state = board->get_board_state();
 	// If new current player has no legal moves, swap back
 	if (BoardUtil::get_legal_moves(state, current_player).size() == 0)
 	{
-		current_player = (current_player == 1 ? 2 : 1);
+		current_player = (current_player == PLAYER1 ? PLAYER2 : PLAYER1);
 		// If the other player cant play either, game is finished
 		if (BoardUtil::get_legal_moves(state, current_player).size() == 0)
 		{
 			game_finished = true;
-			print_board();
-			cout << "Player " << (current_player == 1 ? "X" : "O") << " won! New game? y/n ";
-			char ng;
-			cin >> ng;
-			if (ng == 'y') reset_game();
+			gameGUI->draw_board(state);
+			int winner = BoardUtil::get_winner(state);
+			if (winner == PLAYER1)
+			{
+				cout << "Black won!";
+				score[PLAYER1]++;
+			}
+			else if (winner == PLAYER2)
+			{
+				cout << "White won!";
+				score[PLAYER2]++;
+			}
+			else
+			{
+				cout << "Draw!";
+				score[2]++;
+			}
+
+			cout << " Click in the window for new game.";
+			SDL_Event e;
+			while (SDL_PollEvent(&e) != 0)
+			{
+				if (e.type == SDL_MOUSEBUTTONDOWN)
+				{
+					reset_game();
+					break;
+				}
+			}
 		}
 	}
 }
@@ -36,9 +60,8 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	player1 = p1;
 	player2 = p2;
 	game_finished = false;
-	current_player = 1;
-	score.player1 = 0;
-	score.player2 = 0;
+	current_player = PLAYER1;
+	score[PLAYER1] = score[PLAYER2] = 0;
 	gameGUI = new GUI(this);
 }
 
@@ -64,14 +87,17 @@ void Game::run_game()
 		
 		Board_state state = board->get_board_state();
 		gameGUI->draw_board(state);
+		cout << "Black: " << state.pieces[0] << ", White: " << state.pieces[1] << endl;
 
 		Position move;
-		if (current_player == 1)
+		if (current_player == PLAYER1)
 		{
+			cout << "Blacks move\n";
 			move = player1->play(state);
 		}
 		else
 		{
+			cout << "Whites move\n";
 			move = player2->play(state);
 		}
 
@@ -90,7 +116,7 @@ bool Game::play(Position pos)
 
 void Game::reset_game()
 {
-	current_player = 1;
+	current_player = PLAYER1;
 	move_history.clear();
 	game_finished = false;
 	
@@ -108,10 +134,6 @@ int Game::get_current_player() const
 	return current_player;
 }
 
-Score Game::get_score() const
-{
-	return score;
-}
 
 // Prints the board state to std::out
 void Game::print_board() const
@@ -184,4 +206,9 @@ void Game::print_board() const
 		SetConsoleTextAttribute(hConsole, C_WHITE);
 		cout << "\n  -------------------------------\n";
 	}
+}
+
+vector<Position> Game::get_move_history() const
+{
+	return move_history;
 }

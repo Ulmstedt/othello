@@ -119,7 +119,7 @@ GUI::~GUI()
 
 void GUI::draw_board(Board_state state)
 {
-	cout << "Drawing board" << endl;
+	//cout << "Drawing board" << endl;
 	// Draw background
 	SDL_RenderCopy(renderer, boardTexture, NULL, NULL);
 
@@ -129,14 +129,14 @@ void GUI::draw_board(Board_state state)
 	{
 		for (int x = 0; x < WIDTH; ++x)
 		{
-			if (state.board[x][y] != 0)
+			if (state.board[x][y] != EMPTY)
 			{
 				SDL_Rect fillRect = get_rect(x, y);
-				if (state.board[x][y] == 1)
+				if (state.board[x][y] == PLAYER1)
 				{
 					SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 				}
-				else if (state.board[x][y] == 2)
+				else if (state.board[x][y] == PLAYER2)
 				{
 					SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				}
