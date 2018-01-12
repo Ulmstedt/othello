@@ -28,11 +28,15 @@ void Game::next_player()
 			{
 				cout << "Black won!";
 				score[PLAYER1]++;
+				player1->notify_win();
+				player2->notify_loss();
 			}
 			else if (winner == PLAYER2)
 			{
 				cout << "White won!";
 				score[PLAYER2]++;
+				player2->notify_win();
+				player1->notify_loss();
 			}
 			else
 			{
