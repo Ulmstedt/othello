@@ -41,6 +41,8 @@ bool Board::play(Position pos, int player)
 	state.pieces[player] += flips.size() + 1;
 	int opponent = (player == PLAYER1 ? PLAYER2 : PLAYER1);
 	state.pieces[opponent] -= flips.size();
+	
+	return true;
 }
 
 
