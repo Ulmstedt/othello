@@ -33,6 +33,7 @@ typedef struct
 // GUI
 #define GUI_XMARGIN 4 // Margin from left side of window
 #define GUI_YMARGIN 4 // Margin from top of window
-#define GUI_SQWIDTH 65 // 520/8
+#define GUI_SQWIDTH 64 // 520/8
+#define GUI_SQSPACING 1 // Border between squares
 #define GUI_SQHEIGHT GUI_SQWIDTH
 #define GUI_PADDING 4 // Padding when drawing a piece in a square
