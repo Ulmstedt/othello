@@ -2,7 +2,6 @@
 #include "Game.h"
 #include <iostream>
 #include "Definitions.h"
-#include <windows.h>
 #include "BoardUtil.h"
 #include <SDL.h>
 
@@ -149,79 +148,6 @@ int Game::get_current_player() const
 	return current_player;
 }
 
-
-// Prints the board state to std::out
-void Game::print_board() const
-{
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	Board_state state = board->get_board_state();
-
-	system("CLS");
-
-	cout << "  ";
-	SetConsoleTextAttribute(hConsole, C_NUMS);
-	for (int i = 0; i < WIDTH; ++i)
-	{
-		cout << " " << i << "  ";
-	}
-
-	SetConsoleTextAttribute(hConsole, C_WHITE);
-	cout << "\n  -------------------------------\n";
-
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		SetConsoleTextAttribute(hConsole, C_NUMS);
-		cout << y << " ";
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			switch (state.board[x][y])
-			{
-			case 0:
-				if (SHOW_LEGAL_MOVES)
-				{
-					vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
-					bool legal = false;
-					for (Position pos : legal_moves)
-					{
-						if (pos.x == x && pos.y == y)
-						{
-							legal = true;
-							SetConsoleTextAttribute(hConsole, C_RED);
-							cout << " + ";
-							break;
-						}
-					}
-					if (!legal)
-					{
-						SetConsoleTextAttribute(hConsole, C_WHITE);
-						cout << "   ";
-					}
-				}
-				else
-				{
-					SetConsoleTextAttribute(hConsole, C_WHITE);
-					cout << "   ";
-				}
-				break;
-			case 1:
-				SetConsoleTextAttribute(hConsole, C_X);
-				cout << " X ";
-				break;
-			case 2:
-				SetConsoleTextAttribute(hConsole, C_O);
-				cout << " O ";
-				break;
-			}
-
-			SetConsoleTextAttribute(hConsole, C_WHITE);
-			if (x < 7) cout << "|";
-		}
-
-		SetConsoleTextAttribute(hConsole, C_WHITE);
-		cout << "\n  -------------------------------\n";
-	}
-}
 
 vector<Position> Game::get_move_history() const
 {

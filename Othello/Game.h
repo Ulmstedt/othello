@@ -32,7 +32,6 @@ public:
 	void reset_game();
 	Board_state get_board_state() const;
 	int get_current_player() const;
-	void print_board() const;
 	vector<Position> get_move_history() const;
 };
 
