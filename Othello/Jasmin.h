@@ -7,9 +7,11 @@
 #define MAXIMIZE 1
 
 #define V_CORNER 15
-#define V_ADJCORNER 0
+#define V_ADJCORNER 1
 #define V_DADJCORNER -10
-#define V_EDGE 3
+#define V_EDGE 4
+#define V_MIDEDGE 3
+#define V_TEMPNAME 0
 
 using namespace std;
 

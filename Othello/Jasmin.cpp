@@ -16,10 +16,14 @@ void Jasmin::init_pos_weights()
 	// Positions diagonally adjacent to corners
 	pos_weight[1][1] = pos_weight[6][1] = pos_weight[1][6] = pos_weight[6][6] = V_DADJCORNER;
 	// Edges
-	for (int i = 2; i <= 5; ++i)
-	{
-		pos_weight[i][0] = pos_weight[0][i] = pos_weight[i][7] = pos_weight[7][i] = V_EDGE;
-	}
+	pos_weight[0][2] = pos_weight[2][0] = pos_weight[5][0] = pos_weight[0][5] =
+		pos_weight[2][7] = pos_weight[7][2] = pos_weight[7][5] = pos_weight[5][7] = V_EDGE;
+	// Mid edges
+	pos_weight[3][0] = pos_weight[4][0] = pos_weight[0][3] = pos_weight[0][4] =
+		pos_weight[3][7] = pos_weight[4][7] = pos_weight[7][3] = pos_weight[7][4] = V_MIDEDGE;
+
+	pos_weight[2][1] = pos_weight[1][2] = pos_weight[1][5] = pos_weight[2][6] =
+		pos_weight[5][1] = pos_weight[6][2] = pos_weight[5][6] = pos_weight[6][5] = 0;
 
 }
 
