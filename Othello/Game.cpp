@@ -27,30 +27,35 @@ void Game::next_player()
 			int winner = BoardUtil::get_winner(state);
 			if (winner == PLAYER1)
 			{
-				cout << "Black won!";
+				cout << "Black won!\n";
 				score[PLAYER1]++;
 				player1->notify_win(state);
 				player2->notify_loss(state);
 			}
 			else if (winner == PLAYER2)
 			{
-				cout << "White won!";
+				cout << "White won!\n";
 				score[PLAYER2]++;
 				player2->notify_win(state);
 				player1->notify_loss(state);
 			}
 			else
 			{
-				cout << "Draw!";
+				cout << "Draw!\n";
 				score[2]++;
 			}
 
-			cout << " Click in the window for new game.";
+			cout << "-- Score --" << endl << "Black: " << score[PLAYER1] << ", White: " << score[PLAYER2] << endl;
+			cout << "Click in the window for new game.";
 			SDL_Event e;
 			while (1)
 			{
 				SDL_PollEvent(&e);
-				if (e.type == SDL_MOUSEBUTTONDOWN)
+				if (e.type == SDL_QUIT)
+				{
+					Game::quit_game();
+				}
+				else if (e.type == SDL_MOUSEBUTTONDOWN)
 				{
 					cout << "Starting new game\n";
 					reset_game();
