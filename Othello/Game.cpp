@@ -10,6 +10,7 @@ using namespace std;
 
 void Game::next_player()
 {
+	cout << "Next player" << endl;
 	// Swap current player
 	current_player = (current_player == PLAYER1 ? PLAYER2 : PLAYER1);
 
@@ -28,15 +29,15 @@ void Game::next_player()
 			{
 				cout << "Black won!";
 				score[PLAYER1]++;
-				player1->notify_win();
-				player2->notify_loss();
+				player1->notify_win(state);
+				player2->notify_loss(state);
 			}
 			else if (winner == PLAYER2)
 			{
 				cout << "White won!";
 				score[PLAYER2]++;
-				player2->notify_win();
-				player1->notify_loss();
+				player2->notify_win(state);
+				player1->notify_loss(state);
 			}
 			else
 			{
@@ -109,7 +110,12 @@ void Game::run_game()
 		bool success = play(move);
 		if (success)
 		{
+			cout << "SUCCESS\n";
 			next_player();
+		}
+		else
+		{
+			cout << "FAIL\n";
 		}
 	}
 }
