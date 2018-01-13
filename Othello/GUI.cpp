@@ -97,8 +97,8 @@ void GUI::close()
 SDL_Rect GUI::get_rect(int x, int y) const
 {
 	SDL_Rect rect;
-	rect.x = GUI_XMARGIN + x*GUI_SQWIDTH + GUI_PADDING;
-	rect.y = GUI_YMARGIN + y*GUI_SQHEIGHT + GUI_PADDING;
+	rect.x = GUI_XMARGIN + x*(GUI_SQWIDTH + GUI_SQSPACING) + GUI_PADDING;
+	rect.y = GUI_YMARGIN + y*(GUI_SQHEIGHT + GUI_SQSPACING) + GUI_PADDING;
 	rect.w = GUI_SQWIDTH - 2 * GUI_PADDING;
 	rect.h = GUI_SQHEIGHT - 2 * GUI_PADDING;
 	return rect;
