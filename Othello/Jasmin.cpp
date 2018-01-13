@@ -67,13 +67,15 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 {
 	for (Position p : edge_moves)
 	{
+		Board_state temp_state = state;
+		temp_state.board[p.x][p.y] = player_id;
 		if (p.y == 0 || p.y == 7) // Top and bottom edge
 		{
 			// ### Check if opponent can take it back immediately
 			Position leftpos = { p.x - 1, p.y };
 			Position rightpos = { p.x + 1, p.y };
-			vector<Position> opp_leftflips = BoardUtil::get_flips(state, leftpos, opponent_id); // Flips if opponent places in leftpos
-			vector<Position> opp_rightflips = BoardUtil::get_flips(state, rightpos, opponent_id); // Flips if opponent places in rightpos
+			vector<Position> opp_leftflips = BoardUtil::get_flips(temp_state, leftpos, opponent_id); // Flips if opponent places in leftpos
+			vector<Position> opp_rightflips = BoardUtil::get_flips(temp_state, rightpos, opponent_id); // Flips if opponent places in rightpos
 			if (opp_leftflips.size() > 0 || opp_rightflips.size() > 0)
 			{
 				// This is bad, reduce score for that position
@@ -83,8 +85,8 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 			// ### Check for deadlocks (where there is 1 square free between two own ones)
 			leftpos = { p.x - 2, p.y };
 			rightpos = { p.x + 2, p.y };
-			if ((BoardUtil::inside_board(leftpos) && state.board[leftpos.x][leftpos.y] == player_id && state.board[p.x - 1][p.y] == EMPTY)
-				|| (BoardUtil::inside_board(rightpos) && state.board[rightpos.x][rightpos.y] == player_id && state.board[p.x + 1][p.y] == EMPTY))
+			if ((BoardUtil::inside_board(leftpos) && temp_state.board[leftpos.x][leftpos.y] == player_id && temp_state.board[p.x - 1][p.y] == EMPTY)
+				|| (BoardUtil::inside_board(rightpos) && temp_state.board[rightpos.x][rightpos.y] == player_id && temp_state.board[p.x + 1][p.y] == EMPTY))
 			{
 				// Bad, reduce score
 				value_grid[p.x][p.y] -= P_DEADLOCK;
@@ -95,8 +97,8 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 			// ### Check if opponent can take it back immediately
 			Position toppos = { p.x, p.y - 1 };
 			Position botpos = { p.x, p.y + 1 };
-			vector<Position> opp_topflips = BoardUtil::get_flips(state, toppos, opponent_id); // Flips if opponent places in leftpos
-			vector<Position> opp_botflips = BoardUtil::get_flips(state, botpos, opponent_id); // Flips if opponent places in rightpos
+			vector<Position> opp_topflips = BoardUtil::get_flips(temp_state, toppos, opponent_id); // Flips if opponent places in leftpos
+			vector<Position> opp_botflips = BoardUtil::get_flips(temp_state, botpos, opponent_id); // Flips if opponent places in rightpos
 			if (opp_topflips.size() > 0 || opp_botflips.size() > 0)
 			{
 				// This is bad, reduce score for that position
@@ -106,8 +108,8 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 			// ### Check for deadlocks (where there is 1 square free between two own ones)
 			toppos = { p.x, p.y - 2 };
 			botpos = { p.x, p.y + 2 };
-			if ((BoardUtil::inside_board(toppos) && state.board[toppos.x][toppos.y] == player_id && state.board[p.x][p.y - 1] == EMPTY)
-				|| (BoardUtil::inside_board(botpos) && state.board[botpos.x][botpos.y] == player_id && state.board[p.x][p.y + 1] == EMPTY))
+			if ((BoardUtil::inside_board(toppos) && temp_state.board[toppos.x][toppos.y] == player_id && temp_state.board[p.x][p.y - 1] == EMPTY)
+				|| (BoardUtil::inside_board(botpos) && temp_state.board[botpos.x][botpos.y] == player_id && temp_state.board[p.x][p.y + 1] == EMPTY))
 			{
 				// Bad, reduce score
 				value_grid[p.x][p.y] -= P_DEADLOCK;
