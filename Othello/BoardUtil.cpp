@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BoardUtil.h"
+#include <windows.h>
 
 vector<Position> BoardUtil::get_legal_moves(Board_state state, int player)
 {
@@ -112,4 +113,75 @@ int BoardUtil::empty_positions(Board_state state)
 	}
 
 	return empty_positions;
+}
+
+// Prints the board state to std::out
+void BoardUtil::print_board(Board_state state, int current_player)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	system("CLS");
+
+	cout << "  ";
+	SetConsoleTextAttribute(hConsole, C_NUMS);
+	for (int i = 0; i < WIDTH; ++i)
+	{
+		cout << " " << i << "  ";
+	}
+
+	SetConsoleTextAttribute(hConsole, C_WHITE);
+	cout << "\n  -------------------------------\n";
+
+	for (int y = 0; y < HEIGHT; ++y)
+	{
+		SetConsoleTextAttribute(hConsole, C_NUMS);
+		cout << y << " ";
+		for (int x = 0; x < WIDTH; ++x)
+		{
+			switch (state.board[x][y])
+			{
+			case EMPTY:
+				if (SHOW_LEGAL_MOVES)
+				{
+					vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
+					bool legal = false;
+					for (Position pos : legal_moves)
+					{
+						if (pos.x == x && pos.y == y)
+						{
+							legal = true;
+							SetConsoleTextAttribute(hConsole, C_RED);
+							cout << " + ";
+							break;
+						}
+					}
+					if (!legal)
+					{
+						SetConsoleTextAttribute(hConsole, C_WHITE);
+						cout << "   ";
+					}
+				}
+				else
+				{
+					SetConsoleTextAttribute(hConsole, C_WHITE);
+					cout << "   ";
+				}
+				break;
+			case PLAYER1:
+				SetConsoleTextAttribute(hConsole, C_X);
+				cout << " X ";
+				break;
+			case PLAYER2:
+				SetConsoleTextAttribute(hConsole, C_O);
+				cout << " O ";
+				break;
+			}
+
+			SetConsoleTextAttribute(hConsole, C_WHITE);
+			if (x < 7) cout << "|";
+		}
+
+		SetConsoleTextAttribute(hConsole, C_WHITE);
+		cout << "\n  -------------------------------\n";
+	}
 }

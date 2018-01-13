@@ -87,6 +87,15 @@ void Board::init_board(int b)
 		state.board[0][0] = EMPTY;
 		state.pieces[0]--;
 		break;
+	case 2:
+		// Edge retake situation
+		state.board[0][4] = state.board[1][4] = state.board[2][4] = state.board[3][4] =
+			state.board[4][4] = state.board[5][4] = state.board[5][3] = state.board[3][5] =
+			state.board[2][6] = state.board[4][6] = state.board[5][5] = PLAYER1;
+		state.board[5][2] = state.board[3][3] = state.board[4][3] = state.board[2][5] =
+			state.board[4][5] = state.board[3][6] = state.board[5][6] = state.board[2][7] =
+			state.board[3][7] = state.board[4][7] = state.board[5][7] = state.board[6][7] = PLAYER2;
+		break;
 	default:
 		break;
 	}
