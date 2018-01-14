@@ -58,13 +58,7 @@ void Board::flip(vector<Position> positions)
 void Board::init_board(int b)
 {
 	// Clear board
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			state.board[x][y] = EMPTY;
-		}
-	}
+	BoardUtil::clear_board(state);
 
 	switch (b)
 	{
@@ -95,6 +89,15 @@ void Board::init_board(int b)
 		state.board[5][2] = state.board[3][3] = state.board[4][3] = state.board[2][5] =
 			state.board[4][5] = state.board[3][6] = state.board[5][6] = state.board[2][7] =
 			state.board[3][7] = state.board[4][7] = state.board[5][7] = state.board[6][7] = PLAYER2;
+		break;
+	case 3:
+		state.board[1][2] = state.board[0][3] = state.board[2][3] = state.board[2][5] =
+			state.board[1][4] = PLAYER1;
+		state.board[4][0] = state.board[4][1] = state.board[4][2] = state.board[4][3] =
+			state.board[4][4] = state.board[4][5] = state.board[3][2] = state.board[3][3] =
+			state.board[3][4] = state.board[3][5] = state.board[2][2] = state.board[2][4] =
+			state.board[0][5] = state.board[5][3] = state.board[5][4] = state.board[5][5] =
+			state.board[6][4] = state.board[7][5] = PLAYER2;
 		break;
 	default:
 		break;

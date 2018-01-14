@@ -185,3 +185,14 @@ void BoardUtil::print_board(Board_state state, int current_player)
 		cout << "\n  -------------------------------\n";
 	}
 }
+
+void BoardUtil::clear_board(Board_state & state)
+{
+	for (int y = 0; y < HEIGHT; ++y)
+	{
+		for (int x = 0; x < WIDTH; ++x)
+		{
+			state.board[x][y] = EMPTY;
+		}
+	}
+}

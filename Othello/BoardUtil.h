@@ -16,5 +16,6 @@ public:
 	static int get_winner(Board_state); // Returns 0 if black won, 1 if white won or -1 if draw
 	static int empty_positions(Board_state);
 	static void print_board(Board_state state, int current_player); // Prints board to cout
+	static void clear_board(Board_state &state);
 };
 
