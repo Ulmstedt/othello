@@ -102,6 +102,7 @@ void Game::run_game()
 		bool success = play(move);
 		if (success)
 		{
+			move_history.push_back(move);
 			next_player();
 		}
 	}
