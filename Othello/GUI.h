@@ -35,5 +35,6 @@ public:
 	~GUI();
 	void draw_board(Board_state);
 	void handle_events();
+	static void wait_for_input();
 };
 

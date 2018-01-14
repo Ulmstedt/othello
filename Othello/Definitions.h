@@ -1,5 +1,9 @@
 #pragma once
 
+#define SHOW_LEGAL_MOVES false
+#define SHOW_VALUE_GRID_P1 false
+#define SHOW_VALUE_GRID_P2 true
+
 #define PLAYER1 0
 #define PLAYER2 1
 #define EMPTY -1
@@ -16,7 +20,6 @@
 #define C_O 80
 #define C_NUMS 6
 
-#define SHOW_LEGAL_MOVES false
 
 typedef struct
 {

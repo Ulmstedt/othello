@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Game.h"
 #include "BoardUtil.h"
+#include <stdlib.h>
 
 #define SCREEN_WIDTH 528
 #define SCREEN_HEIGHT 528
@@ -41,6 +42,8 @@ bool GUI::init()
 				cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << endl;
 				success = false;
 			}
+			SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 		}
 	}
 
@@ -85,7 +88,7 @@ void GUI::close()
 {
 	SDL_DestroyTexture(boardTexture);
 	boardTexture = NULL;
-	
+
 	SDL_DestroyWindow(window);
 	window = NULL;
 	SDL_DestroyRenderer(renderer);
@@ -119,11 +122,41 @@ GUI::~GUI()
 
 void GUI::draw_board(Board_state state)
 {
-	//cout << "Drawing board" << endl;
 	// Draw background
 	SDL_RenderCopy(renderer, boardTexture, NULL, NULL);
 
 	int current_player = game->get_current_player();
+	vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
+
+	IPlayer *cur_player = (current_player == PLAYER1 ? game->player1 : game->player2);
+	float lowest = 100000, highest = -100000, pval = 0;
+	if (current_player == PLAYER1 && SHOW_VALUE_GRID_P1 || current_player == PLAYER2 && SHOW_VALUE_GRID_P2)
+	{
+		// Find lowest and highest value to adjust color intensity properly
+		for (Position p : legal_moves)
+		{
+			if (cur_player->value_grid[p.x][p.y] < lowest)
+			{
+				lowest = cur_player->value_grid[p.x][p.y];
+			}
+			if (cur_player->value_grid[p.x][p.y] > highest)
+			{
+				highest = cur_player->value_grid[p.x][p.y];
+			}
+		}
+		// Make all values positive to make it easier to calculate alpha properly
+		if (lowest < 0)
+		{
+			highest += abs(lowest) + 1;
+			pval += abs(lowest) + 1;
+		}
+		// Adjust if highest is 0 so that alpha isnt always 0
+		if (highest <= 0)
+		{
+			highest += 1;
+			pval += 1;
+		}
+	}
 
 	for (int y = 0; y < HEIGHT; ++y)
 	{
@@ -143,20 +176,31 @@ void GUI::draw_board(Board_state state)
 				//cout << "Drawing a rect x:" << fillRect.x << " y:" << fillRect.y << " w:" << fillRect.w << " h:" << fillRect.h << endl;
 				SDL_RenderFillRect(renderer, &fillRect);
 			}
-			else if (SHOW_LEGAL_MOVES)
-			{
-				vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
-				for (Position pos : legal_moves)
-				{
-					if (pos.x == x && pos.y == y)
-					{
-						SDL_Rect fillRect = get_rect(x, y);
-						SDL_SetRenderDrawColor(renderer, 0xFF, 0xCC, 0x00, 0);
-						SDL_RenderFillRect(renderer, &fillRect);
-						break;
-					}
-				}
-			}
+		}
+	}
+
+	// Show legal moves
+	if (SHOW_LEGAL_MOVES)
+	{
+		for (Position p : legal_moves)
+		{
+			SDL_Rect fillRect = get_rect(p.x, p.y);
+			SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 70);
+			SDL_RenderFillRect(renderer, &fillRect);
+			break;
+		}
+	}
+
+	// Show value grid
+	if (current_player == PLAYER1 && SHOW_VALUE_GRID_P1 || current_player == PLAYER2 && SHOW_VALUE_GRID_P2)
+	{
+		for (Position p : legal_moves)
+		{
+			cout << "(" << p.x << ", " << p.y << "): " << cur_player->value_grid[p.x][p.y] << endl;
+			SDL_Rect fillRect = get_rect(p.x, p.y);
+			float alpha = (cur_player->value_grid[p.x][p.y] + pval) / highest * 255;
+			SDL_SetRenderDrawColor(renderer, alpha, 0, 0, alpha);
+			SDL_RenderFillRect(renderer, &fillRect);
 		}
 	}
 
@@ -172,6 +216,23 @@ void GUI::handle_events()
 		if (e.type == SDL_QUIT)
 		{
 			Game::quit_game();
+		}
+	}
+}
+
+void GUI::wait_for_input()
+{
+	SDL_Event e;
+	while (1)
+	{
+		SDL_PollEvent(&e);
+		if (e.type == SDL_QUIT)
+		{
+			Game::quit_game();
+		}
+		else if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+			break;
 		}
 	}
 }
