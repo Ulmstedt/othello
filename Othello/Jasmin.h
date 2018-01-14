@@ -36,7 +36,6 @@ class Jasmin : public IPlayer
 		{ V_CORNER, 1, 4, 3, 3, 4, 1, V_CORNER }
 	};
 
-	void init_pos_weights();
 	void reset_value_grid();
 	void compute_min_values(Board_state state, vector<Position> legal_moves);
 	void compute_max_values(Board_state state, vector<Position> legal_moves);
