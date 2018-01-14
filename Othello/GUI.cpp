@@ -104,6 +104,18 @@ SDL_Rect GUI::get_rect(int x, int y) const
 	rect.y = GUI_YMARGIN + y*(GUI_SQHEIGHT + GUI_SQSPACING) + GUI_PADDING;
 	rect.w = GUI_SQWIDTH - 2 * GUI_PADDING;
 	rect.h = GUI_SQHEIGHT - 2 * GUI_PADDING;
+
+	return rect;
+}
+
+SDL_Rect GUI::get_marker_rect(int x, int y) const
+{
+	SDL_Rect rect;
+	rect.x = GUI_XMARGIN + x*(GUI_SQWIDTH + GUI_SQSPACING) + GUI_SQWIDTH / 2 - GUI_MARKERSIZE / 2;
+	rect.y = GUI_YMARGIN + y*(GUI_SQHEIGHT + GUI_SQSPACING) + GUI_SQHEIGHT / 2 - GUI_MARKERSIZE / 2;
+	rect.w = GUI_MARKERSIZE;
+	rect.h = GUI_MARKERSIZE;
+	
 	return rect;
 }
 
@@ -189,11 +201,7 @@ void GUI::draw_board(Board_state state)
 	// Show most recent move
 	if (move_history.size() > 0)
 	{
-		SDL_Rect lmrect;
-		lmrect.x = GUI_XMARGIN + last_move.x*(GUI_SQWIDTH + GUI_SQSPACING) + GUI_SQWIDTH / 2 - GUI_LASTMOVESIZE / 2;
-		lmrect.y = GUI_YMARGIN + last_move.y*(GUI_SQHEIGHT + GUI_SQSPACING) + GUI_SQHEIGHT / 2 - GUI_LASTMOVESIZE / 2;
-		lmrect.w = GUI_LASTMOVESIZE;
-		lmrect.h = GUI_LASTMOVESIZE;
+		SDL_Rect lmrect = get_marker_rect(last_move.x, last_move.y);
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 255);
 		SDL_RenderFillRect(renderer, &lmrect);
 	}
@@ -203,9 +211,9 @@ void GUI::draw_board(Board_state state)
 	{
 		for (Position p : legal_moves)
 		{
-			SDL_Rect fillRect = get_rect(p.x, p.y);
-			SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 70);
-			SDL_RenderFillRect(renderer, &fillRect);
+			SDL_Rect lrect = get_marker_rect(p.x, p.y);
+			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 180);
+			SDL_RenderFillRect(renderer, &lrect);
 		}
 	}
 

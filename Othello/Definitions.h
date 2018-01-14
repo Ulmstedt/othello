@@ -41,4 +41,4 @@ typedef struct
 #define GUI_SQHEIGHT GUI_SQWIDTH
 #define GUI_PADDING 4 // Padding when drawing a piece in a square
 
-#define GUI_LASTMOVESIZE 8
+#define GUI_MARKERSIZE 8

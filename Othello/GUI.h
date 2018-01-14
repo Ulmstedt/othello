@@ -29,6 +29,7 @@ class GUI
 	bool loadMedia();
 	void close();
 	SDL_Rect get_rect(int x, int y) const;
+	SDL_Rect get_marker_rect(int x, int y) const;
 
 public:
 	GUI(Game*);
