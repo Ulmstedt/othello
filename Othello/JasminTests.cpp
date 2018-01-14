@@ -5,6 +5,7 @@
 #include "Definitions.h"
 #include "Board.h"
 #include "Jasmin.h"
+#include "BoardUtil.h"
 
 void setup_tests();
 void run_tests();
@@ -90,13 +91,7 @@ void setup_tests()
 	JasminTestcase case1;
 	case1.test_id = 1;
 	// Clear board
-	for (int y = 0; y < HEIGHT; ++y)
-	{
-		for (int x = 0; x < WIDTH; ++x)
-		{
-			case1.state.board[x][y] = EMPTY;
-		}
-	}
+	BoardUtil::clear_board(case1.state);
 	case1.state.board[0][4] = case1.state.board[1][4] = case1.state.board[2][4] = case1.state.board[3][4] =
 		case1.state.board[4][4] = case1.state.board[5][4] = case1.state.board[5][3] = case1.state.board[3][5] =
 		case1.state.board[2][6] = case1.state.board[4][6] = case1.state.board[5][5] = PLAYER1;
@@ -106,4 +101,18 @@ void setup_tests()
 	Position banned = { 0, 3 };
 	case1.banned.push_back(banned);
 	test_cases.push_back(case1);
+
+	// ### Jasmin makes bad edge move ###
+	JasminTestcase case2;
+	case2.test_id = 2;
+	case2.state.board[1][2] = case2.state.board[0][3] = case2.state.board[2][3] = case2.state.board[2][5] =
+		case2.state.board[1][4] = PLAYER1;
+	case2.state.board[4][0] = case2.state.board[4][1] = case2.state.board[4][2] = case2.state.board[4][3] =
+		case2.state.board[4][4] = case2.state.board[4][5] = case2.state.board[3][2] = case2.state.board[3][3] =
+		case2.state.board[3][4] = case2.state.board[3][5] = case2.state.board[2][2] = case2.state.board[2][4] =
+		case2.state.board[0][5] = case2.state.board[5][3] = case2.state.board[5][4] = case2.state.board[5][5] =
+		case2.state.board[6][4] = case2.state.board[7][5] = PLAYER2;
+	banned = { 0, 4 };
+	case2.banned.push_back(banned);
+	test_cases.push_back(case2);
 }
