@@ -87,6 +87,10 @@ void run_tests()
 
 void setup_tests()
 {
+	// Temp variables to push to vectors
+	Position banned;
+	Position allowed;
+
 	// ### Edge retake situation ###
 	JasminTestcase case1;
 	case1.test_id = 1;
@@ -98,7 +102,7 @@ void setup_tests()
 	case1.state.board[5][2] = case1.state.board[3][3] = case1.state.board[4][3] = case1.state.board[2][5] =
 		case1.state.board[4][5] = case1.state.board[3][6] = case1.state.board[5][6] = case1.state.board[2][7] =
 		case1.state.board[3][7] = case1.state.board[4][7] = case1.state.board[5][7] = case1.state.board[6][7] = PLAYER2;
-	Position banned = { 0, 3 };
+	banned = { 0, 3 };
 	case1.banned.push_back(banned);
 	test_cases.push_back(case1);
 
@@ -115,4 +119,18 @@ void setup_tests()
 	banned = { 0, 4 };
 	case2.banned.push_back(banned);
 	test_cases.push_back(case2);
+
+	// ### Jasmin makes bad edge move ###
+	JasminTestcase case3;
+	case3.test_id = 3;
+	case3.state.board[1][2] = case3.state.board[0][3] = case3.state.board[2][3] = case3.state.board[2][5] =
+		case2.state.board[1][4] = PLAYER1;
+	case3.state.board[4][0] = case3.state.board[4][1] = case3.state.board[4][2] = case3.state.board[4][3] =
+		case3.state.board[4][4] = case3.state.board[4][5] = case3.state.board[3][2] = case3.state.board[3][3] =
+		case3.state.board[3][4] = case3.state.board[3][5] = case3.state.board[2][2] = case3.state.board[2][4] =
+		case3.state.board[0][5] = case3.state.board[5][3] = case3.state.board[5][4] = case3.state.board[5][5] =
+		case3.state.board[6][4] = case3.state.board[7][5] = PLAYER2;
+	allowed = { 7, 3 };
+	case3.banned.push_back(banned);
+	test_cases.push_back(case3);
 }
