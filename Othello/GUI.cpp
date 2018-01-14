@@ -187,7 +187,6 @@ void GUI::draw_board(Board_state state)
 			SDL_Rect fillRect = get_rect(p.x, p.y);
 			SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 70);
 			SDL_RenderFillRect(renderer, &fillRect);
-			break;
 		}
 	}
 
