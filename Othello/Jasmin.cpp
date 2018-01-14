@@ -73,7 +73,17 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 		{
 			// ### Check if opponent can take it back immediately
 			Position leftpos = { p.x - 1, p.y };
+			while (leftpos.x >= 0 && temp_state.board[leftpos.x][leftpos.y] == player_id)
+			{
+				leftpos.x -= 1;
+			}
+
 			Position rightpos = { p.x + 1, p.y };
+			while (rightpos.x <= 7 && temp_state.board[rightpos.x][rightpos.y] == player_id)
+			{
+				rightpos.x += 1;
+			}
+
 			vector<Position> opp_leftflips = BoardUtil::get_flips(temp_state, leftpos, opponent_id); // Flips if opponent places in leftpos
 			vector<Position> opp_rightflips = BoardUtil::get_flips(temp_state, rightpos, opponent_id); // Flips if opponent places in rightpos
 			if (opp_leftflips.size() > 0 || opp_rightflips.size() > 0)
@@ -96,7 +106,17 @@ void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
 		{
 			// ### Check if opponent can take it back immediately
 			Position toppos = { p.x, p.y - 1 };
+			while (toppos.y >= 0 && temp_state.board[toppos.x][toppos.y] == player_id)
+			{
+				toppos.y -= 1;
+			}
+
 			Position botpos = { p.x, p.y + 1 };
+			while (botpos.y <= 7 && temp_state.board[botpos.x][botpos.y] == player_id)
+			{
+				botpos.y += 1;
+			}
+
 			vector<Position> opp_topflips = BoardUtil::get_flips(temp_state, toppos, opponent_id); // Flips if opponent places in leftpos
 			vector<Position> opp_botflips = BoardUtil::get_flips(temp_state, botpos, opponent_id); // Flips if opponent places in rightpos
 			if (opp_topflips.size() > 0 || opp_botflips.size() > 0)
