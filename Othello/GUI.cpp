@@ -128,6 +128,13 @@ void GUI::draw_board(Board_state state)
 	int current_player = game->get_current_player();
 	vector<Position> legal_moves = BoardUtil::get_legal_moves(state, current_player);
 
+	vector<Position> move_history = game->get_move_history();
+	Position last_move;
+	if (move_history.size() > 0)
+	{
+		last_move = move_history.back();
+	}
+
 	IPlayer *cur_player = (current_player == PLAYER1 ? game->player1 : game->player2);
 	float lowest = 100000, highest = -100000, pval = 0;
 	if (current_player == PLAYER1 && SHOW_VALUE_GRID_P1 || current_player == PLAYER2 && SHOW_VALUE_GRID_P2)
@@ -177,6 +184,18 @@ void GUI::draw_board(Board_state state)
 				SDL_RenderFillRect(renderer, &fillRect);
 			}
 		}
+	}
+
+	// Show most recent move
+	if (move_history.size() > 0)
+	{
+		SDL_Rect lmrect;
+		lmrect.x = GUI_XMARGIN + last_move.x*(GUI_SQWIDTH + GUI_SQSPACING) + GUI_SQWIDTH / 2 - GUI_LASTMOVESIZE / 2;
+		lmrect.y = GUI_YMARGIN + last_move.y*(GUI_SQHEIGHT + GUI_SQSPACING) + GUI_SQHEIGHT / 2 - GUI_LASTMOVESIZE / 2;
+		lmrect.w = GUI_LASTMOVESIZE;
+		lmrect.h = GUI_LASTMOVESIZE;
+		SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 255);
+		SDL_RenderFillRect(renderer, &lmrect);
 	}
 
 	// Show legal moves

@@ -1,8 +1,8 @@
 #pragma once
 
-#define SHOW_LEGAL_MOVES false
+#define SHOW_LEGAL_MOVES true
 #define SHOW_VALUE_GRID_P1 false
-#define SHOW_VALUE_GRID_P2 true
+#define SHOW_VALUE_GRID_P2 false
 
 #define PLAYER1 0
 #define PLAYER2 1
@@ -40,3 +40,5 @@ typedef struct
 #define GUI_SQSPACING 1 // Border between squares
 #define GUI_SQHEIGHT GUI_SQWIDTH
 #define GUI_PADDING 4 // Padding when drawing a piece in a square
+
+#define GUI_LASTMOVESIZE 8
