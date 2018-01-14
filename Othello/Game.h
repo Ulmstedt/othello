@@ -11,6 +11,7 @@ class Game
 {
 	Board *board = NULL;
 	int current_player;
+	int first_player;
 	int score[3] = { 0, 0, 0}; // p1, p2, draws
 
 	IPlayer *player1 = NULL;

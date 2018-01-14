@@ -9,7 +9,6 @@ using namespace std;
 
 void Game::next_player()
 {
-	cout << "Next player" << endl;
 	// Swap current player
 	current_player = (current_player == PLAYER1 ? PLAYER2 : PLAYER1);
 
@@ -46,7 +45,7 @@ void Game::next_player()
 
 			cout << "-- Score --" << endl << "Black: " << score[PLAYER1] << ", White: " << score[PLAYER2] << endl;
 			cout << "Click in the window for new game.";
-			GUI::wait_for_input();
+			//GUI::wait_for_input();
 			cout << "Starting new game\n";
 			reset_game();
 		}
@@ -58,7 +57,8 @@ Game::Game(IPlayer *p1, IPlayer *p2)
 	board = new Board();
 	player1 = p1;
 	player2 = p2;
-	current_player = PLAYER1;
+	first_player = PLAYER1;
+	current_player = first_player;
 	score[PLAYER1] = score[PLAYER2] = 0;
 	gameGUI = new GUI(this);
 }
@@ -115,7 +115,8 @@ bool Game::play(Position pos)
 
 void Game::reset_game()
 {
-	current_player = PLAYER1;
+	first_player = (first_player == PLAYER1 ? PLAYER2 : PLAYER1);
+	current_player = first_player;
 	move_history.clear();
 
 	delete board;
