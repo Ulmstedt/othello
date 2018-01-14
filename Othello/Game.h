@@ -22,6 +22,7 @@ class Game
 	void next_player();
 	bool play(Position);
 
+	friend class GUI;
 public:
 	Game(IPlayer *player1, IPlayer *player2);
 	~Game();

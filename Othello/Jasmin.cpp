@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "BoardUtil.h"
+#include "GUI.h"
 
 using namespace std;
 
@@ -204,6 +205,6 @@ Position Jasmin::play(Board_state state)
 	compute_edge_values(state, edge_moves);
 
 
-
+	GUI::wait_for_input();
 	return get_best_move(legal_moves);
 }

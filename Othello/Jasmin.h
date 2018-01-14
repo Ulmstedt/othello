@@ -35,7 +35,6 @@ class Jasmin : public IPlayer
 		{ 1, -10, 0, -1, -1, 0, -10, 1 },
 		{ V_CORNER, 1, 4, 3, 3, 4, 1, V_CORNER }
 	};
-	float value_grid[8][8];
 
 	void init_pos_weights();
 	void reset_value_grid();

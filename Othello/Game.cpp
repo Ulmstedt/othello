@@ -46,21 +46,9 @@ void Game::next_player()
 
 			cout << "-- Score --" << endl << "Black: " << score[PLAYER1] << ", White: " << score[PLAYER2] << endl;
 			cout << "Click in the window for new game.";
-			SDL_Event e;
-			while (1)
-			{
-				SDL_PollEvent(&e);
-				if (e.type == SDL_QUIT)
-				{
-					Game::quit_game();
-				}
-				else if (e.type == SDL_MOUSEBUTTONDOWN)
-				{
-					cout << "Starting new game\n";
-					reset_game();
-					break;
-				}
-			}
+			GUI::wait_for_input();
+			cout << "Starting new game\n";
+			reset_game();
 		}
 	}
 }
@@ -94,7 +82,7 @@ void Game::run_game()
 	while (1)
 	{
 		gameGUI->handle_events();
-		
+
 		Board_state state = board->get_board_state();
 		gameGUI->draw_board(state);
 		cout << "Black: " << state.pieces[0] << ", White: " << state.pieces[1] << endl;
@@ -114,12 +102,7 @@ void Game::run_game()
 		bool success = play(move);
 		if (success)
 		{
-			cout << "SUCCESS\n";
 			next_player();
-		}
-		else
-		{
-			cout << "FAIL\n";
 		}
 	}
 }
@@ -133,7 +116,7 @@ void Game::reset_game()
 {
 	current_player = PLAYER1;
 	move_history.clear();
-	
+
 	delete board;
 	board = new Board();
 }
