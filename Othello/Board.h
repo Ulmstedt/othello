@@ -7,7 +7,6 @@ using namespace std;
 class Board
 {
 	Board_state state;
-	void flip(vector<Position>); // Flips all the positions in input vector
 	void init_board(int);
 
 public:

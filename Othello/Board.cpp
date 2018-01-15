@@ -35,7 +35,7 @@ bool Board::play(Position pos, int player)
 	}
 		
 	state.board[pos.x][pos.y] = player;
-	flip(flips);
+	BoardUtil::flip(state, flips);
 
 	// Update pieces counter
 	state.pieces[player] += flips.size() + 1;
@@ -45,15 +45,6 @@ bool Board::play(Position pos, int player)
 	return true;
 }
 
-
-// Flips all the positions in input vector
-void Board::flip(vector<Position> positions)
-{
-	for (Position p : positions)
-	{
-		state.board[p.x][p.y] = (state.board[p.x][p.y] == PLAYER1 ? PLAYER2 : PLAYER1);
-	}
-}
 
 void Board::init_board(int b)
 {

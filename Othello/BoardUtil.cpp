@@ -27,6 +27,15 @@ vector<Position> BoardUtil::get_legal_moves(Board_state state, int player)
 	return positions;
 }
 
+// Flips all the positions in input vector
+void BoardUtil::flip(Board_state &state, vector<Position> positions)
+{
+	for (Position p : positions)
+	{
+		state.board[p.x][p.y] = (state.board[p.x][p.y] == PLAYER1 ? PLAYER2 : PLAYER1);
+	}
+}
+
 // Returns a vector containing all the flipped positions from a certain move for a certain player
 vector<Position> BoardUtil::get_flips(Board_state state, Position pos, int player)
 {
