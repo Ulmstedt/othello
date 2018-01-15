@@ -18,7 +18,7 @@ void Jasmin::compute_min_values(Board_state state, vector<Position> legal_moves)
 {
 	for (Position p : legal_moves)
 	{
-		// Speculative temp board
+		// Speculative temp state
 		Board_state temp_state = state;
 
 		// Try playing at p
@@ -56,80 +56,226 @@ bool Jasmin::on_edge(Position pos) const
 	}
 }
 
-void Jasmin::compute_edge_values(Board_state state, vector<Position> edge_moves)
+void Jasmin::compute_edge_values(Board_state state, vector<Position> legal_moves)
 {
-	for (Position p : edge_moves)
+	for (Position p : legal_moves)
 	{
-		Board_state temp_state = state;
-		temp_state.board[p.x][p.y] = player_id;
-		if (p.y == 0 || p.y == 7) // Top and bottom edge
+		if (on_edge(p))
 		{
-			// ### Check if opponent can take it back immediately
-			Position leftpos = { p.x - 1, p.y };
-			while (leftpos.x >= 0 && temp_state.board[leftpos.x][leftpos.y] == player_id)
-			{
-				leftpos.x -= 1;
-			}
+			// Speculative temp state
+			Board_state temp_state = state;
 
-			Position rightpos = { p.x + 1, p.y };
-			while (rightpos.x <= 7 && temp_state.board[rightpos.x][rightpos.y] == player_id)
-			{
-				rightpos.x += 1;
-			}
+			// Try playing at p
+			vector<Position> flips = BoardUtil::get_flips(state, p, player_id);
+			temp_state.board[p.x][p.y] = player_id;
+			BoardUtil::flip(temp_state, flips);
 
-			vector<Position> opp_leftflips = BoardUtil::get_flips(temp_state, leftpos, opponent_id); // Flips if opponent places in leftpos
-			vector<Position> opp_rightflips = BoardUtil::get_flips(temp_state, rightpos, opponent_id); // Flips if opponent places in rightpos
-			if (opp_leftflips.size() > 0 || opp_rightflips.size() > 0)
+			if (p.y == 0 || p.y == 7) // Top and bottom edge
 			{
-				// This is bad, reduce score for that position
-				value_grid[p.x][p.y] -= P_EDGERETAKE;
-			}
+				// Check if opponent can take it back immediately
+				check_edge_retake(temp_state, p, HORIZONTAL);
 
-			// ### Check for deadlocks (where there is 1 square free between two own ones)
-			leftpos = { p.x - 2, p.y };
-			rightpos = { p.x + 2, p.y };
-			if ((BoardUtil::inside_board(leftpos) && temp_state.board[leftpos.x][leftpos.y] == player_id && temp_state.board[p.x - 1][p.y] == EMPTY)
-				|| (BoardUtil::inside_board(rightpos) && temp_state.board[rightpos.x][rightpos.y] == player_id && temp_state.board[p.x + 1][p.y] == EMPTY))
-			{
-				// Bad, reduce score
-				value_grid[p.x][p.y] -= P_DEADLOCK;
-			}
-		}
-		else if (p.x == 0 || p.x == 7) // Left and right edge
-		{
-			// ### Check if opponent can take it back immediately
-			Position toppos = { p.x, p.y - 1 };
-			while (toppos.y >= 0 && temp_state.board[toppos.x][toppos.y] == player_id)
-			{
-				toppos.y -= 1;
-			}
+				// Check for deadlocks (where there is 1 square free between two own ones)
+				check_edge_deadlock(temp_state, p, HORIZONTAL);
 
-			Position botpos = { p.x, p.y + 1 };
-			while (botpos.y <= 7 && temp_state.board[botpos.x][botpos.y] == player_id)
-			{
-				botpos.y += 1;
+				// Check if the opponent can box himself in between two of our blocking pieces
+				check_edge_box_in(temp_state, p, HORIZONTAL);
 			}
-
-			vector<Position> opp_topflips = BoardUtil::get_flips(temp_state, toppos, opponent_id); // Flips if opponent places in leftpos
-			vector<Position> opp_botflips = BoardUtil::get_flips(temp_state, botpos, opponent_id); // Flips if opponent places in rightpos
-			if (opp_topflips.size() > 0 || opp_botflips.size() > 0)
+			else if (p.x == 0 || p.x == 7) // Left and right edge
 			{
-				// This is bad, reduce score for that position
-				value_grid[p.x][p.y] -= P_EDGERETAKE;
-			}
+				// Check if opponent can take it back immediately
+				check_edge_retake(temp_state, p, VERTICAL);
 
-			// ### Check for deadlocks (where there is 1 square free between two own ones)
-			toppos = { p.x, p.y - 2 };
-			botpos = { p.x, p.y + 2 };
-			if ((BoardUtil::inside_board(toppos) && temp_state.board[toppos.x][toppos.y] == player_id && temp_state.board[p.x][p.y - 1] == EMPTY)
-				|| (BoardUtil::inside_board(botpos) && temp_state.board[botpos.x][botpos.y] == player_id && temp_state.board[p.x][p.y + 1] == EMPTY))
-			{
-				// Bad, reduce score
-				value_grid[p.x][p.y] -= P_DEADLOCK;
+				// Check for deadlocks (where there is 1 square free between two own ones)
+				check_edge_deadlock(temp_state, p, VERTICAL);
+
+				// Check if the opponent can box himself in between two of our blocking pieces
+				check_edge_box_in(temp_state, p, VERTICAL);
 			}
 		}
 	}
 
+}
+
+/*
+	O - X O
+*/
+void Jasmin::check_edge_box_in(Board_state state, Position p, int plane)
+{
+	Position pos1, pos2;
+	if (plane == HORIZONTAL)
+	{
+		pos1 = { p.x - 1, p.y };
+		if (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == EMPTY)
+		{
+			pos1.x -= 1;
+			// Move as long as pos2 is opponents piece
+			while (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == opponent_id)
+			{
+				pos1.x -= 1;
+			}
+
+			if (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == player_id)
+			{
+				// Bad, reduce points
+				value_grid[p.x][p.y] -= P_BOXIN;
+			}
+		}
+
+		pos2 = { p.x + 1, p.y };
+		if (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == EMPTY)
+		{
+			pos2.x += 1;
+			// Move as long as pos2 is opponents piece
+			while (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == opponent_id)
+			{
+				pos2.x += 1;
+			}
+
+			if (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == player_id)
+			{
+				// Bad, reduce points
+				value_grid[p.x][p.y] -= P_BOXIN;
+			}
+		}
+	}
+	else if (plane == VERTICAL)
+	{
+		pos1 = { p.x, p.y - 1 };
+		if (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == EMPTY)
+		{
+			pos1.y -= 1;
+			// Move as long as pos2 is opponents piece
+			while (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == opponent_id)
+			{
+				pos1.y -= 1;
+			}
+
+			if (BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == player_id)
+			{
+				// Bad, reduce points
+				value_grid[p.x][p.y] -= P_BOXIN;
+			}
+		}
+
+		pos2 = { p.x, p.y + 1 };
+		if (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == EMPTY)
+		{
+			pos2.y += 1;
+			// Move as long as pos2 is opponents piece
+			while (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == opponent_id)
+			{
+				pos2.y += 1;
+			}
+
+			if (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == player_id)
+			{
+				// Bad, reduce points
+				value_grid[p.x][p.y] -= P_BOXIN;
+			}
+		}
+	}
+}
+
+/*
+	O - O
+*/
+void Jasmin::check_edge_deadlock(Board_state state, Position p, int plane)
+{
+	Position pos1, pos2;
+	if (plane == HORIZONTAL)
+	{
+		pos1 = { p.x - 2, p.y };
+		pos2 = { p.x + 2, p.y };
+		if ((BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == player_id && state.board[p.x - 1][p.y] == EMPTY)
+			|| (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == player_id && state.board[p.x + 1][p.y] == EMPTY))
+		{
+			// Bad, reduce score
+			value_grid[p.x][p.y] -= P_DEADLOCK;
+		}
+	}
+	else if (plane == VERTICAL)
+	{
+		pos1 = { p.x, p.y - 2 };
+		pos2 = { p.x, p.y + 2 };
+		if ((BoardUtil::inside_board(pos1) && state.board[pos1.x][pos1.y] == player_id && state.board[p.x][p.y - 1] == EMPTY)
+			|| (BoardUtil::inside_board(pos2) && state.board[pos2.x][pos2.y] == player_id && state.board[p.x][p.y + 1] == EMPTY))
+		{
+			// Bad, reduce score
+			value_grid[p.x][p.y] -= P_DEADLOCK;
+		}
+	}
+
+}
+
+void Jasmin::check_edge_retake(Board_state state, Position p, int plane)
+{
+	Position pos1, pos2;
+	if (plane == HORIZONTAL)
+	{
+		pos1 = { p.x - 1, p.y };
+		while (pos1.x >= 0 && state.board[pos1.x][pos1.y] == player_id)
+		{
+			pos1.x -= 1;
+		}
+
+		pos2 = { p.x + 1, p.y };
+		while (pos2.x <= 7 && state.board[pos2.x][pos2.y] == player_id)
+		{
+			pos2.x += 1;
+		}
+	}
+	else if (plane == VERTICAL)
+	{
+		pos1 = { p.x, p.y - 1 };
+		while (pos1.y >= 0 && state.board[pos1.x][pos1.y] == player_id)
+		{
+			pos1.y -= 1;
+		}
+
+		pos2 = { p.x, p.y + 1 };
+		while (pos2.y <= 7 && state.board[pos2.x][pos2.y] == player_id)
+		{
+			pos2.y += 1;
+		}
+
+	}
+
+	vector<Position> opp_flips1 = BoardUtil::get_flips(state, pos1, opponent_id); // Flips if opponent places in leftpos
+	vector<Position> opp_flips2 = BoardUtil::get_flips(state, pos2, opponent_id); // Flips if opponent places in rightpos
+	if (opp_flips1.size() > 0 || opp_flips2.size() > 0)
+	{
+		// This is bad, reduce score for that position
+		value_grid[p.x][p.y] -= P_EDGERETAKE;
+	}
+}
+
+void Jasmin::guard_corners(Board_state state, vector<Position> legal_moves)
+{
+	for (Position p : legal_moves)
+	{
+		// Speculative temp state
+		Board_state temp_state = state;
+
+		// Try playing at p
+		vector<Position> flips = BoardUtil::get_flips(state, p, player_id);
+		temp_state.board[p.x][p.y] = player_id;
+		BoardUtil::flip(temp_state, flips);
+
+		// Check if opponent can now play a corner
+		vector<Position> opp_legal_moves = BoardUtil::get_legal_moves(temp_state, opponent_id);
+		for (Position op : opp_legal_moves)
+		{
+			if (op.x == 0 && op.y == 0
+				|| op.x == 7 && op.y == 0
+				|| op.x == 0 && op.y == 7
+				|| op.x == 7 && op.y == 7)
+			{
+				cout << "Opponent can take (" << op.x << ", " << op.y << ") if i play (" << p.x << ", " << p.y << ")\n";
+				value_grid[p.x][p.y] -= P_OPPCORNER;
+			}
+		}
+	}
 }
 
 Position Jasmin::get_best_move(vector<Position> legal_moves) const
@@ -199,16 +345,9 @@ Position Jasmin::play(Board_state state)
 		compute_max_values(state, legal_moves);
 	}
 
-	// Compute edge values
-	vector<Position> edge_moves;
-	for (Position p : legal_moves)
-	{
-		if (on_edge(p))
-		{
-			edge_moves.push_back(p);
-		}
-	}
-	compute_edge_values(state, edge_moves);
+
+	compute_edge_values(state, legal_moves);
+	guard_corners(state, legal_moves);
 
 
 	//GUI::wait_for_input();

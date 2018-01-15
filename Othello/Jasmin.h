@@ -6,6 +6,9 @@
 #define MINIMIZE 0
 #define MAXIMIZE 1
 
+#define HORIZONTAL 0
+#define VERTICAL 1
+
 // Positional values
 #define V_CORNER 15
 #define V_ADJCORNER 1
@@ -17,6 +20,8 @@
 // Situational penalties
 #define P_DEADLOCK 30
 #define P_EDGERETAKE 30
+#define P_BOXIN 30
+#define P_OPPCORNER 30
 
 using namespace std;
 
@@ -27,12 +32,12 @@ class Jasmin : public IPlayer
 	float pos_weight[8][8] =
 	{
 		{ V_CORNER, 1, 4, 3, 3, 4, 1, V_CORNER },
-		{ 1, -10, 0, -1, -1, 0, -10, 1 },
+		{ 1, -15, 0, -1, -1, 0, -15, 1 },
 		{ 4, 0, 2, 1, 1, 2, 0, 4 },
 		{ 3, -1, 1, 1, 1, 1, -1, 3 },
 		{ 3, -1, 1, 1, 1, 1, -1, 3 },
 		{ 4, 0, 2, 1, 1, 2, 0, 4 },
-		{ 1, -10, 0, -1, -1, 0, -10, 1 },
+		{ 1, -15, 0, -1, -1, 0, -15, 1 },
 		{ V_CORNER, 1, 4, 3, 3, 4, 1, V_CORNER }
 	};
 
@@ -40,7 +45,11 @@ class Jasmin : public IPlayer
 	void compute_min_values(Board_state state, vector<Position> legal_moves);
 	void compute_max_values(Board_state state, vector<Position> legal_moves);
 	bool on_edge(Position pos) const; // Returns true if pos is an edge position
-	void compute_edge_values(Board_state state, vector<Position> edge_moves);
+	void compute_edge_values(Board_state state, vector<Position> legal_moves);
+	void check_edge_box_in(Board_state state, Position p, int plane);
+	void check_edge_deadlock(Board_state state, Position p, int plane);
+	void check_edge_retake(Board_state state, Position p, int plane);
+	void guard_corners(Board_state state, vector<Position> legal_moves);
 	Position get_best_move(vector<Position> legal_moves) const;
 public:
 	Jasmin(int id);
