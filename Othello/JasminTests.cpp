@@ -42,6 +42,7 @@ void run_tests()
 	cout << "--- Running " << num_tests << " test(s) for Jasmin ---" << endl;
 	for (JasminTestcase jt : test_cases)
 	{
+		cout << "Running test " << jt.test_id << endl;
 		bool test_passed = true;
 		Position move = jasmin->play(jt.state);
 		// if allowed vector is not empty, check if the pos is matched
@@ -94,7 +95,6 @@ void setup_tests()
 	// ### Edge retake situation ###
 	JasminTestcase case1;
 	case1.test_id = 1;
-	// Clear board
 	BoardUtil::clear_board(case1.state);
 	case1.state.board[0][4] = case1.state.board[1][4] = case1.state.board[2][4] = case1.state.board[3][4] =
 		case1.state.board[4][4] = case1.state.board[5][4] = case1.state.board[5][3] = case1.state.board[3][5] =
@@ -109,6 +109,7 @@ void setup_tests()
 	// ### Jasmin makes bad edge move ###
 	JasminTestcase case2;
 	case2.test_id = 2;
+	BoardUtil::clear_board(case2.state);
 	case2.state.board[1][2] = case2.state.board[0][3] = case2.state.board[2][3] = case2.state.board[2][5] =
 		case2.state.board[1][4] = PLAYER1;
 	case2.state.board[4][0] = case2.state.board[4][1] = case2.state.board[4][2] = case2.state.board[4][3] =
@@ -123,6 +124,7 @@ void setup_tests()
 	// ### Jasmin makes bad edge move ###
 	JasminTestcase case3;
 	case3.test_id = 3;
+	BoardUtil::clear_board(case3.state);
 	case3.state.board[1][2] = case3.state.board[0][3] = case3.state.board[2][3] = case3.state.board[2][5] =
 		case2.state.board[1][4] = PLAYER1;
 	case3.state.board[4][0] = case3.state.board[4][1] = case3.state.board[4][2] = case3.state.board[4][3] =
@@ -133,4 +135,40 @@ void setup_tests()
 	allowed = { 7, 3 };
 	case3.banned.push_back(banned);
 	test_cases.push_back(case3);
+
+	// ### Jasmin should guard corner ###
+	JasminTestcase case4;
+	case4.test_id = 4;
+	BoardUtil::clear_board(case4.state);
+	case4.state.board[0][4] = case4.state.board[1][4] = case4.state.board[1][5] = case4.state.board[1][3] =
+		case4.state.board[2][2] = case4.state.board[2][3] = case4.state.board[3][2] = case4.state.board[3][3] =
+		case4.state.board[4][2] = case4.state.board[4][3] = case4.state.board[5][2] = case4.state.board[5][3] =
+		case4.state.board[6][3] = case4.state.board[7][4] = case4.state.board[2][6] = case4.state.board[2][7] =
+		case4.state.board[5][5] = case4.state.board[0][2] = case4.state.board[1][2] = PLAYER1;
+	case4.state.board[0][1] = case4.state.board[0][5]= case4.state.board[2][4] =
+		case4.state.board[2][5] = case4.state.board[3][4] = case4.state.board[3][5] = case4.state.board[4][4] =
+		case4.state.board[4][5] = case4.state.board[5][4] = case4.state.board[6][2] = case4.state.board[7][2] =
+		case4.state.board[7][6] = case4.state.board[3][6] = case4.state.board[4][6] = case4.state.board[5][6] =
+		case4.state.board[5][7] = case4.state.board[6][4] = case4.state.board[6][5] = PLAYER2;
+	allowed = { 0, 3 };
+	case4.allowed.push_back(allowed);
+	test_cases.push_back(case4);
+
+	// ### Jasmin should protect edge ###
+	JasminTestcase case5;
+	case5.test_id = 5;
+	BoardUtil::clear_board(case5.state);
+	case5.state.board[0][4] = case5.state.board[1][4] = case5.state.board[1][5] = case5.state.board[1][3] =
+		case5.state.board[2][2] = case5.state.board[2][3] = case5.state.board[3][2] = case5.state.board[3][3] =
+		case5.state.board[4][2] = case5.state.board[4][3] = case5.state.board[5][2] = case5.state.board[5][3] =
+		case5.state.board[6][3] = case5.state.board[7][4] = case5.state.board[2][6] = case5.state.board[2][7] =
+		case5.state.board[5][5] = case5.state.board[7][3] = case5.state.board[6][4] = PLAYER1;
+	case5.state.board[0][1] = case5.state.board[0][5] = case5.state.board[1][2] = case5.state.board[2][4] =
+		case5.state.board[2][5] = case5.state.board[3][4] = case5.state.board[3][5] = case5.state.board[4][4] =
+		case5.state.board[4][5] = case5.state.board[5][4] = case5.state.board[6][2] = case5.state.board[7][2] =
+		case5.state.board[7][6] = case5.state.board[3][6] = case5.state.board[4][6] = case5.state.board[5][6] =
+		case5.state.board[5][7] = case5.state.board[6][5] = PLAYER2;
+	allowed = { 7, 5 };
+	case5.allowed.push_back(allowed);
+	test_cases.push_back(case5);
 }
