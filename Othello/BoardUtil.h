@@ -2,6 +2,14 @@
 #include <vector>
 #include "Definitions.h"
 
+// Console colors
+#define C_WHITE 7
+#define C_RED 4
+#define C_YELLOW 6
+#define C_X 32
+#define C_O 80
+#define C_NUMS 6
+
 using namespace std;
 
 class BoardUtil

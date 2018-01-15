@@ -1,9 +1,17 @@
 #pragma once
 #include <SDL.h>
 #include "Definitions.h"
-//#include "Game.h"
 
 class Game;
+
+#define GUI_XMARGIN 4 // Margin from left side of window
+#define GUI_YMARGIN 4 // Margin from top of window
+#define GUI_SQWIDTH 64 // 520/8
+#define GUI_SQSPACING 1 // Border between squares
+#define GUI_SQHEIGHT GUI_SQWIDTH
+#define GUI_PADDING 4 // Padding when drawing a piece in a square
+
+#define GUI_MARKERSIZE 8
 
 class GUI
 {
