@@ -129,7 +129,7 @@ void BoardUtil::print_board(Board_state state, int current_player)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	system("CLS");
+	//system("CLS");
 
 	cout << "  ";
 	SetConsoleTextAttribute(hConsole, C_NUMS);
@@ -147,7 +147,7 @@ void BoardUtil::print_board(Board_state state, int current_player)
 		cout << y << " ";
 		for (int x = 0; x < WIDTH; ++x)
 		{
-			switch (state.board[x][y])
+ 			switch (state.board[x][y])
 			{
 			case EMPTY:
 				if (SHOW_LEGAL_MOVES)
