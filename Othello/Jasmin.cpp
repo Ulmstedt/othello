@@ -18,8 +18,20 @@ void Jasmin::compute_min_values(Board_state state, vector<Position> legal_moves)
 {
 	for (Position p : legal_moves)
 	{
+		// Speculative temp board
+		Board_state temp_state = state;
+
+		// Try playing at p
 		vector<Position> flips = BoardUtil::get_flips(state, p, player_id);
-		value_grid[p.x][p.y] -= flips.size();
+		temp_state.board[p.x][p.y] = player_id;
+		BoardUtil::flip(temp_state, flips);
+
+		// See how many legal moves Jasmin and the opponent would have
+		int my_flips = BoardUtil::get_legal_moves(temp_state, player_id).size();
+		int opp_flips = BoardUtil::get_legal_moves(temp_state, opponent_id).size();
+
+		// Give points for our own moves and reduce score for opponents moves
+		value_grid[p.x][p.y] = value_grid[p.x][p.y] + my_flips - opp_flips;
 	}
 }
 

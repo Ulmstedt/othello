@@ -15,8 +15,8 @@
 #define V_TEMPNAME 0
 
 // Situational penalties
-#define P_DEADLOCK 25
-#define P_EDGERETAKE 25
+#define P_DEADLOCK 30
+#define P_EDGERETAKE 30
 
 using namespace std;
 
