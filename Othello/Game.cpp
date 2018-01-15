@@ -45,7 +45,7 @@ void Game::next_player()
 
 			cout << "-- Score --" << endl << "Black: " << score[PLAYER1] << ", White: " << score[PLAYER2] << endl;
 			cout << "Click in the window for new game.";
-			//GUI::wait_for_input();
+			GUI::wait_for_input();
 			cout << "Starting new game\n";
 			reset_game();
 		}
@@ -92,12 +92,23 @@ void Game::run_game()
 		{
 			cout << "Blacks move\n";
 			move = player1->play(state);
+			if (SHOW_VALUE_GRID_P1)
+			{
+				gameGUI->draw_value_grid(state);
+				GUI::wait_for_input();
+			}
 		}
 		else
 		{
 			cout << "Whites move\n";
 			move = player2->play(state);
+			if (SHOW_VALUE_GRID_P2)
+			{
+				gameGUI->draw_value_grid(state);
+				GUI::wait_for_input();
+			}
 		}
+
 
 		bool success = play(move);
 		if (success)
