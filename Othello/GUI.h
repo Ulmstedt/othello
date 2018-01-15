@@ -43,6 +43,7 @@ public:
 	GUI(Game*);
 	~GUI();
 	void draw_board(Board_state);
+	void draw_value_grid(Board_state);
 	void handle_events();
 	static void wait_for_input();
 };
