@@ -90,6 +90,18 @@ void Board::init_board(int b)
 			state.board[1][4] = 
 			state.board[6][4] = state.board[7][5] = PLAYER2;
 		break;
+	case 4:
+		// Protect edge
+		state.board[0][4] = state.board[1][4] = state.board[1][5] = state.board[1][3] =
+			state.board[2][2] = state.board[2][3] = state.board[3][2] = state.board[3][3] =
+			state.board[4][2] = state.board[4][3] = state.board[5][2] = state.board[5][3] =
+			state.board[6][3] = state.board[7][4] = state.board[2][6] = state.board[2][7] =
+			state.board[5][5] = PLAYER1;
+		state.board[0][1] = state.board[0][5] = state.board[1][2] = state.board[2][4] =
+			state.board[2][5] = state.board[3][4] = state.board[3][5] = state.board[4][4] =
+			state.board[4][5] = state.board[5][4] = state.board[6][2] = state.board[7][2] =
+			state.board[7][6] = state.board[3][6] = state.board[4][6] = state.board[5][6] =
+			state.board[5][7] = state.board[6][4] = state.board[6][5] = PLAYER2;
 	default:
 		break;
 	}

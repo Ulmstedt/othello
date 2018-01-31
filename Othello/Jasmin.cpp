@@ -323,12 +323,9 @@ Jasmin::~Jasmin()
 
 Position Jasmin::play(Board_state state)
 {
-	if (ai_state == MINIMIZE)
+	if (ai_state == MINIMIZE && BoardUtil::empty_positions(state) <= START_MAX)
 	{
-		if (BoardUtil::empty_positions(state) <= 12)
-		{
 			ai_state = MAXIMIZE;
-		}
 	}
 
 	reset_value_grid();
