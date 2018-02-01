@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "RemoteNetworkPlayer.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -25,6 +26,10 @@ Position RemoteNetworkPlayer::play(Board_state)
 	while (bytes_left > 0)
 	{
 		int bytes_read = recv(socket, recvptr, bytes_left, 0);
+		if (bytes_read < 0)
+		{
+			Game::quit_game();
+		}
 		recvptr += bytes_read;
 		bytes_left -= bytes_read;
 	}
